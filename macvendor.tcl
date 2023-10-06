@@ -8,4 +8,4 @@ proc pub:macvendor {n u h c t} {
  if { $macvendorresult == "\{" } {set macvendorresult [lindex [split $macvendordata \"] 5]}
  putnow "PRIVMSG $c :[string toupper $t] \0034»»\003 $macvendorresult"
 }
-putlog "+++ MAC Vendors TCL Loaded...
+putlog "+++ MAC Vendors TCL Loaded..."
