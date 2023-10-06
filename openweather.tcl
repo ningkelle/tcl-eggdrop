@@ -2,7 +2,7 @@ bind pub - .wt pub:weather
 proc pub:weather {n u h c t} {
  set t [stripcodes bcruag $t]
  if { $t == "" } {putnow "privmsg $c :Usage : .wt </kab/kota/kec>" ; return}
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" // key : www.openweathermap.org
+ set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # key : www.openweathermap.org
  if {[catch {set weatherurl [http::geturl http://api.openweathermap.org/data/2.5/weather?appid=$apikey&lang=id&units=metric&[http::formatQuery q $t] -timeout 3000]} error]} {putnow "privmsg $c :$error" ; return}
  set response [::json::json2dict [http::data $weatherurl]] ; http::cleanup $weatherurl ; putlog "$response"
  if {[dict get $response cod] == "404"} {putnow "privmsg $c :$t \0034»»\003 [dict get $response message]" ; return}
