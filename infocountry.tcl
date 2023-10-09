@@ -11,7 +11,7 @@ proc pub:country {n u h c t} {
  regexp -all -nocase {:\{"common":"(.*?)",} $countrydata "" names
  regexp -all -nocase {,"official":"(.*?)",} $countrydata "" office
  regexp -all -nocase {"currencies":\{"(.*?)"} $countrydata "" currency
- regexp -all -nocase {"capital":\["(.*?)"\]} $countrydata "" capital
+ regexp -all -nocase {"capital":\["(.*?)"} $countrydata "" capital
  regexp -all -nocase {"name":"(.*?)",} $countrydata "" matauang
  putnow "PRIVMSG $c :[string toupper $t] \0034»»\003 $names \($office\) \0034-\003 \037Ibukota:\037 $capital \0034-\003 \037Mata Uang:\037 $matauang \($currency\)"
 }
