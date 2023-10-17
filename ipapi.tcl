@@ -15,12 +15,11 @@ proc pub:ipapi {n u h c t} {
  putnow "PRIVMSG $c :$query \0034»»\003 $isp ($org) \0034-\003 $city \0034-\003 $regionName \0034-\003 $zip \0034-\003 $country"
 }
 proc check:for:nick { from keyword arguments } {
- set t $::ip_search ; set c $::ipchan ; set u [lindex [split $arguments] 1]
- set hostname [lindex [split $u "="] 1]
+ set t $::ip_search ; set c $::ipchan ; set u [lindex [split $arguments] 1] ; set hostname [lindex [split $u "="] 1]
  regsub {^[-+]} $hostname "" h
  set nickname [lindex [split $u "="] 0]
  regsub {^:} $nickname "" n
  if {$n == ""} {putnow "privmsg $c :Ga ada nicknya" ; unbind RAW - 302 check:for:nick ; return}
  set h [lindex [split $h @] 1] ; pub:ipapi "" $n $t $c $h ; unbind RAW - 302 check:for:nick
 }
-putlog "+++ IP Info TCL Loaded..."
+putlog "+++ IPAPI Info TCL Loaded..."
