@@ -8,7 +8,7 @@ proc pub:ytsearch {n u h c t} {
  set response [::json::json2dict [http::data $ytpage]] ; http::cleanup $ytpage
  if {![dict exists $response pageInfo]} {putnow "privmsg $c :\037YouTube:\037 \0034»»\003 Error!" ; return}
  foreach var {pageInfo items} {set $var [dict get $response $var]} ; set totalResults [dict get $pageInfo totalResults]
- if {$totalResults == 0} {putnow "privmsg $c :\037YouTube:\037 \00359$t\003 \0034»»\003 hasil tidak ditemukan" ; return} else {putnow "privmsg $c :\037YouTube:\037 \00359$t\003 \0034»»\003 \002[commify $totalResults]\002 hasil ditemukan"}
+ if {$totalResults == 0} {putnow "privmsg $c :\037YouTube:\037 \00359$t\003 \0034»»\003 hasil tidak ditemukan" ; return} else {putnow "privmsg $c :\037YouTube:\037 \00359$t\003 \0034»»\003 \002$totalResults\002 hasil ditemukan"}
  foreach line $items {set videoid [dict get [dict get $line id] videoId] ; set title [dict get [dict get $line snippet] title] ; set chtitle [dict get [dict get $line snippet] channelTitle] ; set items "\nhttps://youtu.be/$videoid \0034»»\003 $title \0034-\003 \00353by\003 $chtitle" ; append result $items}
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
 }
