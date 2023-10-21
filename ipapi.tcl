@@ -1,6 +1,6 @@
 bind pub - .ip pub:ipapi
 proc pub:ipapi {n u h c t} {
- set t [lindex [stripcodes bcruag $t] 0]
+ set t [lindex [split [stripcodes bcruag $t]] 0]
  if { $t == "" } {putnow "privmsg $c :Usage: .ip <ip/host>" ; return 0}
  if {![string match -nocase "*:*" $t] && ![string match -nocase "*.*" $t]} {putnow "USERHOST :$t" ; set ::ipchan $c ; set ::ipnick $n ; set ::iphand $h ; bind RAW - 302 check:for:nick ; return}
  if {[catch {set ipapiurl [http::geturl http://ip-api.com/json/$t?fields=4253247 -timeout 30000]} error]} {putnow "privmsg $c :$error" ; return}
