@@ -1,2 +1,2 @@
 # TCL
-> irc.evochat.id/#kiss
+> irc.evochat.id/#Kiss
