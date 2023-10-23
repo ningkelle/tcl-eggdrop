@@ -9,7 +9,7 @@ proc pub:country {n u h c t} {
  foreach var {name currencies capital} {set $var [dict get $response $var]}
  foreach names {common official} {set $names [dict get $name $names]}
  regexp -all -nocase {"currencies":\{"(.*?)":} $countrydata "" currency
- set matauang [dict get [dict get $currencies $currency] name]
+ set matauang [dict get $currencies $currency name]
  putnow "PRIVMSG $c :[string toupper $t] \0034»»\003 $common \($official\) \0034-\003 \037Ibukota:\037 $capital \0034-\003 \037Mata Uang:\037 $matauang \($currency\)"
 }
 putlog "+++ Info Country TCL Loaded..."
