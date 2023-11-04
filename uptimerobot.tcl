@@ -1,10 +1,7 @@
-# .ruptime / .ruptime <monitors id>
 bind pub - .ruptime pub:ruptime
 proc pub:ruptime {n u h c t} {
- set monitorid [lindex [stripcodes bcruag $t] 0]
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; #https://uptimerobot.com/api/
- if {$t == ""} {set query [http::formatQuery api_key $apikey custom_uptime_ratios 90 format json]} else {set query [http::formatQuery api_key $apikey custom_uptime_ratios 90 monitors $monitorid format json]}
- if {[catch {set ruptimepages [http::geturl https://api.uptimerobot.com/v2/getMonitors -query $query -timeout 30000]} error]} {putnow "privmsg $c :$error" ; return}
+ set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://uptimerobot.com/api/
+ if {[catch {set ruptimepages [http::geturl https://api.uptimerobot.com/v2/getMonitors -query [http::formatQuery api_key $apikey custom_uptime_ratios 90 format json] -timeout 30000]} error]} {putnow "privmsg $c :$error" ; return}
  set response [::json::json2dict [http::data $ruptimepages]] ; http::cleanup $ruptimepages
  if {[dict get $response stat] == "fail"} {putnow "privmsg $c :[dict get $response error message]" ; return}
  set monitors [dict get $response monitors] ; if {![llength $monitors] == 1} {putnow "privmsg $c :Not Found" ; return}
