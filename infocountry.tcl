@@ -6,7 +6,7 @@ proc pub:country {n u h c t} {
  set response [::json::json2dict [http::data $countrypage]] ; set countrydata [http::data $countrypage] ; http::cleanup $countrypage ; putlog "$countrydata"
  if {[dict get $response status] == "404"} { putnow "privmsg $c :[string toupper $t] \0034»»\003 [dict get $response message]" ; return }
  if {[dict get $response status] == "400"} { putnow "privmsg $c :[string toupper $t] \0034»»\003 [dict get $response message]" ; return }
- foreach var {name currencies capital} {set $var [dict get $response $var]}
+ foreach var {name currencies capital} {set $var [dict get $response $var]} ; regsub -all "\{" $capital "" capital ; regsub -all "\}" $capital "" capital
  foreach names {common official} {set $names [dict get $name $names]}
  regexp -all -nocase {"currencies":\{"(.*?)":} $countrydata "" currency
  set matauang [dict get $currencies $currency name]
