@@ -1,7 +1,6 @@
 bind pub - .google pub:ggl
 proc pub:ggl {n u h c t} {
- set t [stripcodes bcruag $t] ; if { $t == "" } {putnow "privmsg $c :Usage: .google <keyword> \| .google image <keyword>" ; return 0}
- set gimg [lindex $t 0] ; set gsearch [lrange $t 1 end]
+ set t [stripcodes bcruag $t] ; if { $t == "" } {putnow "privmsg $c :Usage: .google <keyword> \| .google image <keyword>" ; return 0} ; set gimg [lindex $t 0]
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # Google Custom Search API : https://developers.google.com/custom-search/v1/overview
  set sEngine "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # Google Programmable Search Engine : https://programmablesearchengine.google.com/controlpanel/all
  if {$gimg == "image"} {set url "https://www.googleapis.com/customsearch/v1?key=$apikey&cx=$sEngine&searchType=image&lr=lang_id&safe=active&num=5&[http::formatQuery q $t]"} else {set url "https://www.googleapis.com/customsearch/v1?key=$apikey&cx=$sEngine&lr=lang_id&safe=active&num=5&[http::formatQuery q $t]"}
