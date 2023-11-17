@@ -1,9 +1,9 @@
 bind pub - .cekresi pub:cekresi
 proc pub:cekresi {n u h c t} {
  set t [stripcodes bcruag $t] ; set kurir [lindex $t 0] ; set noresi [lindex $t 1]
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
  if {$t == ""} {putnow "notice $n :Usage: .cekresi <code.kurir> <no.resi>" ; putnow "notice $n :Usage: .cekresi kurir \0034=\003 jasa kurir yang tersedia" ; return}
  if {$t == "kurir"} {pub:kurir $n $u $h $c $t ; return}
+ set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
  if {[catch {set cekresipage [http::geturl "https://api.binderbyte.com/v1/track?api_key=$apikey&courier=$kurir&awb=$noresi" -timeout 30000]} error]} {putnow "privmsg $c :$error" ; return}
  set response [::json::json2dict [http::data $cekresipage]] ; http::cleanup $cekresipage
  if {[dict get $response message] == "Parameters `courier` and `awb` is required"} {putnow "privmsg $c :Usage: .cekresi <code.kurir> <no.resi>" ; return 0}
