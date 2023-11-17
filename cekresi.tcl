@@ -1,7 +1,6 @@
 bind pub - .cekresi pub:cekresi
 proc pub:cekresi {n u h c t} {
- set kurir [lindex [stripcodes bcruag $t] 0]
- set noresi [lindex [stripcodes bcruag $t] 1]
+ set t [stripcodes bcruag $t] ; set kurir [lindex $t 0] ; set noresi [lindex $t 1]
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
  if {$t == ""} {putnow "notice $n :Usage: .cekresi <code.kurir> <no.resi>" ; putnow "notice $n :Usage: .cekresi kurir \0034=\003 jasa kurir yang tersedia" ; return}
  if {$t == "kurir"} {pub:kurir $n $u $h $c $t ; return}
