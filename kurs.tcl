@@ -19,8 +19,8 @@ proc pub:exchange {n u h c t} {
  if {![dict exists $curson rates $to]} {putnow "privmsg $c :\0034ERROR:\003 \002$to\002 tidak tersedia"; return} else {set curto [dict get $curson rates $to]}
  if {![dict exists $curson rates $from]} {putnow "privmsg $c :\0034ERROR:\003 \002$from\002 tidak tersedia"; return} {set curfrom [dict get $curson rates $from]}
  set for_one [expr {round($curto/$curfrom)}]; set hasil [expr $for_one*$value]
- if {$value == "1"} {putnow "privmsg $c :[commify $value] $from \0034=\003 [commify $hasil] $to"} else {
-  putnow "privmsg $c :[commify $value] $from \0034=\003 [commify $hasil] $to (1 $from \0034=\003 [commify $for_one] $to)"
+ if {$value == "1"} {putnow "privmsg $c :$value $from \0034=\003 $hasil $to"} else {
+  putnow "privmsg $c :$value $from \0034=\003 $hasil $to (1 $from \0034=\003 $for_one $to)"
  }
 }
 putlog "+++ KURS TCL Loaded..."
