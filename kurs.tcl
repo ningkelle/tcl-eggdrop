@@ -17,7 +17,7 @@ proc pub:exchange {n u h c t} {
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ"; # apikey : www.fixer.io
  catch {exec curl --connect-timeout 5 -X POST http://data.fixer.io/api/latest?access_key=$apikey&format=1} curdata; set curson [json::json2dict $curdata]
  if {![dict exists $curson rates $to]} {putnow "privmsg $c :\0034ERROR:\003 \002$to\002 tidak tersedia"; return} else {set curto [dict get $curson rates $to]}
- if {![dict exists $curson rates $from]} {putnow "privmsg $c :\0034ERROR:\003 \002$from\002 tidak tersedia"; return} {set curfrom [dict get $curson rates $from]}
+ if {![dict exists $curson rates $from]} {putnow "privmsg $c :\0034ERROR:\003 \002$from\002 tidak tersedia"; return} else {set curfrom [dict get $curson rates $from]}
  set for_one [expr {round($curto/$curfrom)}]; set hasil [expr $for_one*$value]
  if {$value == "1"} {putnow "privmsg $c :$value $from \0034=\003 $hasil $to"} else {
   putnow "privmsg $c :$value $from \0034=\003 $hasil $to (1 $from \0034=\003 $for_one $to)"
