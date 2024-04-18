@@ -2,7 +2,7 @@ package require Tcl 8.6.13
 package require http 2.9.8
 package require tls 1.7.22
 package require json 1.3.4
-package require tdom
+package require tdom 0.9.3
 package require eggdrop 1.9
 
 http::register https 443 [list ::tls::socket -tls1 1 -ssl2 0 -ssl3 0 -autoservername 1]
