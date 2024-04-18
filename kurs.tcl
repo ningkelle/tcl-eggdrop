@@ -2,17 +2,17 @@ bind pub - .kurs pub:exchange
 proc pub:exchange {n u h c t} {
  set t [string toupper [stripcodes bcruag $t]]; if {$t == ""} {putnow "privmsg $c :.kurs <mata-uang> <mata-uang-target> <jumlah> \0034-\003 .kurs kwd idr 5"; return}
  set from [lindex [split $t] 0]; set to [lindex [split $t] 1]; set value [lindex [split $t] 2]; set kursdef "IDR"
+ if {$value != ""} {
+  if {![regexp {^[0-9]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
+  if {[regexp {[,]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5.21"; return}
+ } else {set value 1}
  if {[regexp {^[0-9]} $to]} {
   set value $to; set kurs ""; if {$kurs == ""} {set to $kursdef} else {set to $kurs}
  } elseif {$to == ""} {
   set kurs ""; if {$kurs == ""} {set to $kursdef} else {set to $kurs}
  }
- if {$value != ""} {
-  if {![regexp {^[0-9]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
-  if {[regexp {[,]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5.21"; return}
- } else {set value 1}
  if {$value == "0"} {putnow "privmsg $c :Apa kamu tidak punya uang?"; return}
- if {[regexp {[,]} $to]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
+ if {[regexp {[,]} $to] || [regexp {[,]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5.21"; return}
  if {[regexp {^[0-9]} $from]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
  if {[string equal -nocase $to $from]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ"; # apikey : https://apilayer.com/marketplace/fixer-api
