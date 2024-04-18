@@ -12,6 +12,7 @@ proc pub:currency {n u h c t} {
   if {[regexp {[,]} $value]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5.21"; return}
  } else {set value 1}
  if {$value == "0"} {putnow "privmsg $c :Apa kamu tidak punya uang?"; return}
+ if {[regexp {[,]} $to]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
  if {[regexp {^[0-9]} $from]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
  if {[string equal -nocase $to $from]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .kurs kwd idr 5"; return}
  catch {exec curl --connect-timeout 5 -X POST https://www.floatrates.com/daily/$to.json} kursdata; set kursjson [json::json2dict $kursdata]
