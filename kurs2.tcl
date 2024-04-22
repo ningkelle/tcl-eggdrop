@@ -18,7 +18,7 @@ proc pub:currency {n u h c t} {
  catch {exec curl --connect-timeout 5 -X POST https://www.floatrates.com/daily/$to.json} kursdata; set kursjson [json::json2dict $kursdata]
  regexp -all -nocase {\{\".*?(.*?)\":\"} $kursdata "" code; if {![info exists code]} {putnow "privmsg $c :\0034ERROR:\003 \002[string toupper $to]\002 tidak tersedia"; return}
  if {![dict exists $kursjson $from]} {putnow "privmsg $c :\0034ERROR:\003 \002[string toupper $from]\002 tidak tersedia"; return} else {set kursfrom [dict get $kursjson $from inverseRate]}
- set for_one [expr {round($kursfrom)}]; set hasil [expr $for_one*$value]
+ set for_one $kursfrom; set hasil [expr {round($for_one*$value)}]
  if {$value == "1"} {putnow "privmsg $c :$value [string toupper $from] \0034=\003 $hasil [string toupper $to]"} else {
   putnow "privmsg $c :$value [string toupper $from] \0034=\003 $hasil [string toupper $to] (1 [string toupper $from] \0034=\003 $for_one [string toupper $to])"
  }
