@@ -19,7 +19,7 @@ proc pub:exchange {n u h c t} {
  catch {exec curl --connect-timeout 5 -X GET https://api.apilayer.com/fixer/latest?base=$from&symbols=$to -H "apikey: $apikey"} curdata; set curson [json::json2dict $curdata]
  if {[dict exists $curson error type]} {set error [dict get $curson error type]; putnow "privmsg $c :\0034ERROR:\003 $error"; return}
  set curto [dict get $curson rates $to]
- set for_one [expr {round($curto)}]; set hasil [expr $for_one*$value]
+ set for_one $curto; set hasil [expr {round($for_one*$value)}]
  if {$value == "1"} {putnow "privmsg $c :$value $from \0034=\003 $hasil $to"} else {
   putnow "privmsg $c :$value $from \0034=\003 $hasil $to (1 $from \0034=\003 $for_one $to)"
  }
