@@ -19,7 +19,7 @@ proc pub:currency {n u h c t} {
  regexp -all -nocase {\{\".*?(.*?)\":\"} $kursdata "" code; if {![info exists code]} {putnow "privmsg $c :\0034ERROR:\003 \002[string toupper $to]\002 tidak tersedia"; return}
  if {![dict exists $kursjson $from]} {putnow "privmsg $c :\0034ERROR:\003 \002[string toupper $from]\002 tidak tersedia"; return} else {set kursfrom [dict get $kursjson $from inverseRate]}
  set for_one [expr {double(round(100*$kursfrom))/100}]; set hasil [expr {round($for_one*$value)}]
- if {$value == "1"} {putnow "privmsg $c :$value [string toupper $from] \0034=\003 $hasil [string toupper $to]"} else {
+ if {$value == "1"} {putnow "privmsg $c :$value [string toupper $from] \0034=\003 $for_one [string toupper $to]"} else {
   putnow "privmsg $c :$value [string toupper $from] \0034=\003 $hasil [string toupper $to] (1 [string toupper $from] \0034=\003 $for_one [string toupper $to])"
  }
 }
