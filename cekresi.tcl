@@ -1,19 +1,20 @@
 bind pub - .cekresi pub:cekresi
 proc pub:cekresi {n u h c t} {
- set t [stripcodes bcruag $t] ; set kurir [lindex $t 0] ; set noresi [lindex $t 1]
- if {$t == ""} {putnow "notice $n :Usage: .cekresi <code.kurir> <no.resi>" ; putnow "notice $n :Usage: .cekresi kurir \0034=\003 jasa kurir yang tersedia" ; return}
- if {$kurir == "kurir"} {pub:kurir $n $u $h $c $t ; return}
+ set t [stripcodes bcruag $t]; set kurir [lindex $t 0]; set noresi [lindex $t 1]
+ if {$t == ""} {putnow "notice $n :Usage: .cekresi <code.kurir> <no.resi>" ; putnow "notice $n :Usage: .cekresi kurir \0034=\003 jasa kurir yang tersedia"; return}
+ if {$kurir == "kurir"} {pub:kurir $n $c $t; return}
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
  catch {exec curl --connect-timeout 5 -X GET https://api.binderbyte.com/v1/track?api_key=$apikey&courier=$kurir&awb=$noresi} cekresidata; set response [json::json2dict $cekresidata]
  regexp -all -nocase {\{\"status\"} $cekresidata "" status; if {![info exists status]} {putnow "privmsg $c :\0034ERROR:\003 tidak tersedia"; return}
  if {[dict get $response status] != "200"} {putnow "privmsg $c :\0034ERROR:\003 [dict get $response message]"; return 0}
- set data [dict get $response data summary] ; foreach inforesi {awb courier service status date desc amount weight} {set $inforesi [dict get $data $inforesi]}
- set detail [dict get $response data detail] ; foreach detailresi {origin destination shipper receiver} {set $detailresi [dict get $detail $detailresi]}
- set history [dict get $response data history] ; foreach line $history {set date [dict get $line date] ; set date [clock scan $date -format {%Y-%m-%d %H:%M:%S} -timezone :UTC] ; set date [clock format $date -format {%d %b %Y - %H:%M:%S} -timezone :Asia/Jakarta] ; set descs [dict get $line desc] ; set loca [dict get $line location] ; set item "\n$date \0034-\003 $descs \0034-\003 $loca" ; append result $item}
+ set data [dict get $response data summary]; foreach inforesi {awb courier service status date desc amount weight} {set $inforesi [dict get $data $inforesi]}
+ set detail [dict get $response data detail]; foreach detailresi {origin destination shipper receiver} {set $detailresi [dict get $detail $detailresi]}
+ set history [dict get $response data history]; foreach line $history {set date [dict get $line date]; set date [clock scan $date -format {%Y-%m-%d %H:%M:%S} -timezone :UTC]
+ if {$kurir == "jnt"} {set date [clock format $date -format {%d-%b-%Y %H:%M} -timezone :UTC]} else {set date [clock format $date -format {%d-%b-%Y %H:%M} -timezone :Asia/Jakarta]}; set descs [dict get $line desc]; set loca [dict get $line location]; set item "\n$date \0034-\003 $descs \0034-\003 $loca"; append result $item}
  putnow "privmsg $c :\037CekResi:\037 \00359$awb\003 \0034»»\003 $courier \0034-\003 $service \0034-\003 $status \0034-\003 $desc \0034-\003 $amount \0034-\003 $weight \0034-\003 $origin \0034-\003 $destination \0034-\003 $shipper \0034-\003 $receiver"
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
 }
-proc pub:kurir {n u h c t} {
+proc pub:kurir {n c t} {
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
  if {[catch {set kurirpage [http::geturl "https://api.binderbyte.com/v1/list_courier?api_key=$apikey" -timeout 30000]} error]} {putnow "privmsg $c :$error" ; return}
  set response [::json::json2dict [http::data $kurirpage]] ; http::cleanup $kurirpage
