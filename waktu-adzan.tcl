@@ -10,15 +10,15 @@ proc pub:adzan {n u h c t} {
  regexp -all -nocase {\[\{\"Version.*?Country\":\{\"ID\":\"(.*?)\",\"} $keydata "" Country
  regexp -all -nocase {\[\{\"Version.*?AdministrativeArea.*?\"ID\":\"(.*?)\",\"LocalizedName\":\"(.*?)\",\"} $keydata "" StateID State
  regexp -all -nocase {\[\{\"Version.*?GeoPosition.*?\"Latitude\":(.*?),\"Longitude\":(.*?),\"} $keydata "" lati longi
+ regexp -all -nocase {\[\{\"Version.*?TimeZone.*?\"Name\":\"(.*?)\",\"} $keydata "" waktuzona
  if {[catch {set adzanpage [http::geturl https://api.aladhan.com/v1/timings/$waktu?latitude=$lati&longitude=$longi&method=20&tune=1,1,2,2,1,2,2,1,2 -timeout 30000]} error]} {putnow "privmsg $c :$error"; return}
  set adzandata [http::data $adzanpage]; set adzanjson [json::json2dict $adzandata]; http::cleanup $adzanpage
  if {[dict get $adzanjson code] != "200"} {set error [dict get $adzanjson data]; putnow "privmsg $c :\0034ERROR:\003 $error"; return}
- set data [dict get $adzanjson data]; foreach var {timings date meta} {set $var [dict get $data $var]}
- foreach lokasi {latitude longitude timezone} {set $lokasi [dict get $meta $lokasi]}; foreach shalat {Fajr Dhuhr Asr Maghrib Isha Imsak} {set $shalat [dict get $timings $shalat]}
- set jam [dict get $date timestamp]; set zonawaktu [clock format $jam -format "%Z" -timezone :$timezone]; set utc [clock format $jam -format "%z" -timezone :$timezone]
+ set data [dict get $adzanjson data]; foreach var {timings date meta} {set $var [dict get $data $var]}; foreach shalat {Fajr Dhuhr Asr Maghrib Isha Imsak} {set $shalat [dict get $timings $shalat]}
+ set jam [dict get $date timestamp]; set zonawaktu [clock format $jam -format "%Z" -timezone :$waktuzona]; set utc [clock format $jam -format "%z" -timezone :$waktuzona]
  set tanggal [dict get $date hijri day]; set bulan [dict get $date hijri month en]; set tahun [dict get $date hijri year]
- putnow "privmsg $c :\00353\037Info Adzan:\037\003 $LocalizedName, $State, $Country \0034-\003 \037https://google.com/maps?q=$latitude,$longitude\037"
- putnow "privmsg $c :\037TimeZone\037 \0034»»\003 $timezone ($utc)"
+ putnow "privmsg $c :\00353\037Info Adzan:\037\003 $LocalizedName, $State, $Country \0034-\003 \037https://google.com/maps?q=$lati,$longi\037"
+ putnow "privmsg $c :\037TimeZone\037 \0034»»\003 $waktuzona ($utc)"
  putnow "privmsg $c :\037Subuh\037 \0034»»\003 $Fajr $zonawaktu" 
  putnow "privmsg $c :\037Zhuhur\037 \0034»»\003 $Dhuhr $zonawaktu"
  putnow "privmsg $c :\037Ashar\037 \0034»»\003 $Asr $zonawaktu"
