@@ -43,7 +43,7 @@ proc pub:cektarif {n c t} {
   if {[dict exists $line name]} {set name [dict get $line name]} else {set name [dict get $line courier]}; set service [dict get $line service]; set type [dict get $line type]; set harga [dict get $line price]; set estimasi [dict get $line estimated];
   set item "\n$name \0034-\003 $service \0034-\003 $type \0034-\003 Rp [commify $harga] \0034-\003 $estimasi"; append result $item
  }
- putnow "privmsg $c :\00353\037CekTarif:\037\003 \0034[capitalize $origin]\003 \002\u21d2\002 \00359[capitalize $destination]\003 \0034-\003 Berat: $weight"
+ putnow "privmsg $c :\00353\037CekTarif:\037\003 \0034[capitalize $origin]\003 \002\u21d2\002 \00359[capitalize $destination]\003 \0034-\003 \037Berat:\037 $weight"
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
 }
 putlog "+++ CekResi TCL Loaded..."
