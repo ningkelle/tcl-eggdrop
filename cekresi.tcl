@@ -1,4 +1,5 @@
 bind pub - .cekresi pub:cekresi
+set apicekresi "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
 proc pub:cekresi {n u h c t} {
  set t [stripcodes bcruag $t]; set kurir [lindex $t 0]; set noresi [lindex $t 1]
  if {$t == ""} {
@@ -9,8 +10,7 @@ proc pub:cekresi {n u h c t} {
  }
  if {$kurir == "all" || $kurir == "kurir"} {pub:kurir $n $c $t; return}
  if {$kurir == "tarif" || $kurir == "harga"} {pub:cektarif $n $c $t; return}
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
- catch {exec curl --connect-timeout 5 -X GET https://api.binderbyte.com/v1/track?api_key=$apikey&courier=$kurir&awb=$noresi} cekresidata; set response [json::json2dict $cekresidata]
+ catch {exec curl --connect-timeout 5 -X GET https://api.binderbyte.com/v1/track?api_key=$::apicekresi&courier=$kurir&awb=$noresi} cekresidata; set response [json::json2dict $cekresidata]
  regexp -all -nocase {\{\"status\"} $cekresidata "" status; if {![info exists status]} {putnow "privmsg $c :\0034ERROR:\003 tidak tersedia"; return}
  if {[dict get $response status] != "200"} {putnow "privmsg $c :\0034ERROR:\003 [dict get $response message]"; return 0}
  set data [dict get $response data summary]; foreach inforesi {awb courier service status date desc amount weight} {set $inforesi [dict get $data $inforesi]}
@@ -21,8 +21,7 @@ proc pub:cekresi {n u h c t} {
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
 }
 proc pub:kurir {n c t} {
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
- if {[catch {set kurirpage [http::geturl "https://api.binderbyte.com/v1/list_courier?api_key=$apikey" -timeout 30000]} error]} {putnow "privmsg $c :\0034ERROR:\003 $error" ; return}
+ if {[catch {set kurirpage [http::geturl "https://api.binderbyte.com/v1/list_courier?api_key=$::apicekresi" -timeout 30000]} error]} {putnow "privmsg $c :\0034ERROR:\003 $error" ; return}
  set kurirdata [http::data $kurirpage] ; set response [json::json2dict $kurirdata] ; http::cleanup $kurirpage
  foreach line $response {set code [dict get $line code] ; set descr [dict get $line description] ; set item "\n$descr \0034»»\003 $code" ; append result $item}
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
@@ -34,8 +33,7 @@ proc pub:cektarif {n c t} {
   if {![regexp {^[0-9]} $berat]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .cekresi tarif jne jakarta surabaya 5"; return}
   if {[regexp {[,]} $berat]} {putnow "privmsg $c :\0034ERROR:\003 format salah. Contoh: .cekresi tarif jne jakarta surabaya 5.5"; return}
  } else {set berat "1"}
- set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ" ; # https://api.binderbyte.com
- catch {exec curl --connect-timeout 5 -X GET https://api.binderbyte.com/v1/cost?api_key=$apikey&courier=$kurir&origin=$ori&destination=$desti&weight=$berat} cektarifdata; set response [json::json2dict $cektarifdata]
+ catch {exec curl --connect-timeout 5 -X GET https://api.binderbyte.com/v1/cost?api_key=$::apicekresi&courier=$kurir&origin=$ori&destination=$desti&weight=$berat} cektarifdata; set response [json::json2dict $cektarifdata]
  regexp -all -nocase {\{\"status\"} $cektarifdata "" status; if {![info exists status]} {putnow "privmsg $c :\0034ERROR:\003 tidak tersedia"; return}
  if {[dict get $response status] != "200"} {putnow "privmsg $c :\0034ERROR:\003 [dict get $response message]"; return 0}
  set data [dict get $response data summary];
