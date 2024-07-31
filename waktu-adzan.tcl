@@ -11,7 +11,7 @@ proc pub:adzan {n u h c t} {
  regexp -all -nocase {\[\{\"Version.*?AdministrativeArea.*?\"ID\":\"(.*?)\",\"LocalizedName\":\"(.*?)\",\"} $keydata "" StateID State
  regexp -all -nocase {\[\{\"Version.*?GeoPosition.*?\"Latitude\":(.*?),\"Longitude\":(.*?),\"} $keydata "" lati longi
  regexp -all -nocase {\[\{\"Version.*?TimeZone.*?\"Name\":\"(.*?)\",\"} $keydata "" waktuzona
- if {[catch {set adzanpage [http::geturl https://api.aladhan.com/v1/timings/$waktu?latitude=$lati&longitude=$longi&method=20&tune=1,1,2,2,1,2,2,1,2 -timeout 30000]} error]} {putnow "privmsg $c :$error"; return}
+ if {[catch {set adzanpage [http::geturl https://api.aladhan.com/v1/timings/$waktu?latitude=$lati&longitude=$longi&method=20&tune=1,1,2,2,2,2,2,1,2 -timeout 30000]} error]} {putnow "privmsg $c :$error"; return}
  set adzandata [http::data $adzanpage]; set adzanjson [json::json2dict $adzandata]; http::cleanup $adzanpage
  if {[dict get $adzanjson code] != "200"} {set error [dict get $adzanjson data]; putnow "privmsg $c :\0034ERROR:\003 $error"; return}
  set data [dict get $adzanjson data]; foreach var {timings date meta} {set $var [dict get $data $var]}; foreach shalat {Fajr Dhuhr Asr Maghrib Isha Imsak} {set $shalat [dict get $timings $shalat]}
