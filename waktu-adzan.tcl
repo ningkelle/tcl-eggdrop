@@ -3,14 +3,12 @@ proc pub:adzan {n u h c t} {
  set t [stripcodes bcruag $t]; if {$t == ""} {putnow "privmsg $c :.adzan <desa/kel/kec/kota> - Ex: .adzan kebon jeruk"; return}
  regsub -all {\s+} $t "%20" text; set time [unixtime]; set waktu [clock format $time -format "%d-%m-%Y"]
  set apikey "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ"; # apikey : www.developer.accuweather.com
- catch {exec curl -X GET --connect-timeout 5 https://dataservice.accuweather.com/locations/v1/cities/search?apikey=$apikey&offset=1&language=id&q=$text} keydata
- regexp -all -nocase {Unavailable.*?Message\":\"(.*?)\",} $keydata "" error; if {[info exists error]} {putnow "privmsg $c :\0034ERROR\:\003 $error"; return}
- regexp -all -nocase {\[\{\"Version.*?Key\":\"(.*?)\",\"} $keydata "" Key; if {![info exists Key]} {putnow "privmsg $c :\0034ERROR\:\003 Not Found"; return}
- regexp -all -nocase {\[\{\"Version.*?Rank.*?\"LocalizedName\":\"(.*?)\",\"} $keydata "" LocalizedName
- regexp -all -nocase {\[\{\"Version.*?Country\":\{\"ID\":\"(.*?)\",\"} $keydata "" Country
- regexp -all -nocase {\[\{\"Version.*?AdministrativeArea.*?\"ID\":\"(.*?)\",\"LocalizedName\":\"(.*?)\",\"} $keydata "" StateID State
- regexp -all -nocase {\[\{\"Version.*?GeoPosition.*?\"Latitude\":(.*?),\"Longitude\":(.*?),\"} $keydata "" lati longi
- regexp -all -nocase {\[\{\"Version.*?TimeZone.*?\"Name\":\"(.*?)\",\"} $keydata "" waktuzona
+ catch {exec curl -X GET --connect-timeout 5 https://dataservice.accuweather.com/locations/v1/cities/search?apikey=$apikey&offset=1&language=id&q=$text} keydata; set keyjson [json::json2dict $keydata];
+ if {[dict exists $keyjson Code]} {set code [dict get $keyjson Code]; set message [dict get $keyjson Message]; putnow "privmsg $c :\0034ERROR\:\003 $code \0034-\003 $message"; return}
+ if {![dict exists [lindex $keyjson 0] Key]} {putnow "privmsg $c :\0034ERROR\:\003 Not Found"; return}
+ foreach var {LocalizedName AdministrativeArea Country GeoPosition TimeZone} {set $var [dict get [lindex $keyjson 0] $var]};
+ set State [dict get $AdministrativeArea LocalizedName]; set Country [dict get $Country ID];
+ set lati [dict get $GeoPosition Latitude]; set longi [dict get $GeoPosition Longitude]; set waktuzona [dict get $TimeZone Name];
  if {[catch {set adzanpage [http::geturl https://api.aladhan.com/v1/timings/$waktu?latitude=$lati&longitude=$longi&method=20&tune=1,1,2,2,2,2,2,1,2 -timeout 30000]} error]} {putnow "privmsg $c :$error"; return}
  set adzandata [http::data $adzanpage]; set adzanjson [json::json2dict $adzandata]; http::cleanup $adzanpage
  if {[dict get $adzanjson code] != "200"} {set error [dict get $adzanjson data]; putnow "privmsg $c :\0034ERROR:\003 $error"; return}
