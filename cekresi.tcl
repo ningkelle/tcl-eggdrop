@@ -16,7 +16,8 @@ proc pub:cekresi {n u h c t} {
  set data [dict get $response data summary]; foreach inforesi {awb courier service status date desc amount weight} {set $inforesi [dict get $data $inforesi]}
  set detail [dict get $response data detail]; foreach detailresi {origin destination shipper receiver} {set $detailresi [dict get $detail $detailresi]}
  set history [dict get $response data history]; foreach line $history {set date [dict get $line date]; set date [clock scan $date -format {%Y-%m-%d %H:%M:%S} -timezone :UTC]
- if {$kurir == "jnt" || $kurir == "sicepat" || $kurir == "anteraja"} {set date [clock format $date -format {%d-%b-%Y %H:%M} -timezone :UTC]} else {set date [clock format $date -format {%d-%b-%Y %H:%M} -timezone :Asia/Jakarta]}; set descs [dict get $line desc] ; set loca [dict get $line location] ; set item "\n$date \0034-\003 $descs \0034-\003 $loca" ; append result $item}
+ set date [clock format $date -format {%d-%b-%Y %H:%M} -timezone :UTC]
+ set descs [dict get $line desc] ; set loca [dict get $line location] ; set item "\n$date \0034-\003 $descs \0034-\003 $loca" ; append result $item}
  putnow "privmsg $c :\037CekResi:\037 \00359$awb\003 \0034»»\003 $courier \0034-\003 $service \0034-\003 $status \0034-\003 $desc \0034-\003 $amount \0034-\003 $weight \0034-\003 $origin \0034-\003 $destination \0034-\003 $shipper \0034-\003 $receiver"
  foreach output [split $result "\n"] {putnow "privmsg $c :$output"}
 }
