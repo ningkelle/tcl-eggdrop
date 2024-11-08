@@ -25,8 +25,7 @@ proc pub:exchange {n u h c t} {
    putnow "privmsg $c :\0034ERROR:\003 \002$to\002 tidak tersedia"; return
   } else {putnow "privmsg $c :\0034ERROR:\003 $error"; return}
  }
- set curto [dict get $curson rates $to]
- set for_one [expr {double(round(100*$curto))/100}]; set hasil [expr {round($for_one*$value)}]
+ set curto [dict get $curson rates $to]; set result [expr $curto/$curfrom]; set for_one [expr round($curto/$curfrom)]; set hasil [expr {round($result*$value)}]
  if {$value == "1"} {putnow "privmsg $c :[commify $value] $from \0034=\003 [commify $for_one] $to"} else {
   putnow "privmsg $c :[commify $value] $from \0034=\003 [commify $hasil] $to (1 $from \0034=\003 [commify $for_one] $to)"
  }
