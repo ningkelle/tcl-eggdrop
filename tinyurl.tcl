@@ -5,8 +5,8 @@ proc pub:tiny {n u h c t} {
  set apitoken "1234567890ABCDEFGHIJKLMNOPQRSTUVWQYZ"; ## apikey : https://tinyurl.com/app/register
  set apiurl "https://api.tinyurl.com/create?api_token=$apitoken";
  set header "Content-Type: application/json"; set headers "accept: application/json"
- set body "\{\"url\": \"$t\",\"domain\": \"tinyurl.com\",\"description\"\: \"beritadetik\"\}"
- catch {exec curl -X POST $apiurl -H $headers -H $header -d $body 2> /dev/null} data; regexp {"code":(.*?),} $data x code
+ set body "\{\"url\": \"$t\",\"domain\": \"tinyurl.com\",\"description\"\: \"shortly\"\}"
+ catch {exec curl --connect-timeout 5 -X POST $apiurl -H $headers -H $header -d $body 2> /dev/null} data; regexp {"code":(.*?),} $data x code
  if {$code == 1} {regexp {"errors":\["(.*?)"\]} $data x error; putquick "privmsg $c :\0034ERROR:\003 $error"; return}
  set response [json::json2dict $data]; set tiny [dict get $response data tiny_url];
  putquick "privmsg $c :$tiny"
