@@ -6,9 +6,9 @@ proc pub:tiny {n u h c t} {
  set apiurl "https://api.tinyurl.com/create?api_token=$apitoken";
  set header "Content-Type: application/json"; set headers "accept: application/json"
  set body "\{\"url\": \"$t\",\"domain\": \"tinyurl.com\",\"description\"\: \"beritadetik\"\}"
- catch {exec curl -X POST $apiurl -H $headers -H $header -d $body 2> /dev/null} data; putlog $data;
- regexp {"domain":"(.*?)","alias":"(.*?)","} $data x tiny short
- if {![info exists tiny]} {putquick "privmsg $c :\0034ERROR\003"; return} 
- putquick "privmsg $c :https://$tiny/$short"
+ catch {exec curl -X POST $apiurl -H $headers -H $header -d $body 2> /dev/null} data; regexp {"code":(.*?),} $data x code
+ if {$code == 1} {regexp {"errors":\["(.*?)"\]} $data x error; putquick "privmsg $c :\0034ERROR:\003 $error"; return}
+ set response [json::json2dict $data]; set tiny [dict get $response data tiny_url];
+ putquick "privmsg $c :$tiny"
 }
 putlog "+++ Tiny Short URL TCL Loaded..."
