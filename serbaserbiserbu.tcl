@@ -9,7 +9,7 @@ package require tdom 0.9.3
 package require eggdrop 1.9
 
 http::register https 443 [list ::tls::socket -tls1 1 -ssl2 0 -ssl3 0 -autoservername 1]
-http::config -proxyhost "" -useragent "IRCCloud/4.35 (24117RN76O; id; Android 15; 1080x2400; WIFI)"
+http::config -proxyhost "" -useragent "IRCCloud/4.35 (SM-F766B; id; Android 15; 1080x2400; WIFI)"
 
 proc commify {n {s ,} {g 3}} {regsub -all \\d(?=(\\d{$g})+([regexp -inline {\.\d*$} $n]$)) $n \\0$s}
 proc noquote {t} {regsub -all {\."} $t {} t ; regsub -all {"}   $t {} t ; return $t}
