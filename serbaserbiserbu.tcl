@@ -1,12 +1,12 @@
 # untuk menggunakan semua tcl disini, simpan file ini di dir scripts/
 # lalu tambahkan di config : source scripts/serbaserbiserbu.tcl
 ####################################
-package require Tcl 8.6.13
-package require http 2.9.8
-package require tls 1.7.22
-package require json 1.3.4
-package require tdom 0.9.3
-package require eggdrop 1.9
+package require Tcl
+package require http
+package require tls
+package require json
+# package require tdom 0.9.3
+# package require eggdrop 1.9
 
 http::register https 443 [list ::tls::socket -tls1 1 -ssl2 0 -ssl3 0 -autoservername 1]
 http::config -proxyhost "" -useragent "IRCCloud/4.35 (SM-F766B; id; Android 16; 1080x2520; WIFI)"
