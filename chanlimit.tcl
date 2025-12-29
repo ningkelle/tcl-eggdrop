@@ -14,4 +14,4 @@ proc currentlimit {c} {
  if {[string match "*l*" [lindex $currentmodes 0]]} {return [lindex $currentmodes end]}
  return 0
 }
-putlog "ChanLimit TCL Loaded..."
+putlog "+++ ChanLimit TCL Loaded..."
