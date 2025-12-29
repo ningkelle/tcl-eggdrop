@@ -1,5 +1,8 @@
 # untuk menggunakan semua tcl disini, simpan file ini di dir scripts/
 # lalu tambahkan di config : source scripts/serbaserbiserbu.tcl
+# install package berikut:
+# apt install tcl tcl-dev tcl8.6 tcl8.6-dev tcl-tls libsqlite3-tcl tcllib sqlite3 tcllib-critcl -y
+# apt install libssl-dev libzzip-dev libreadline-dev libncurses-dev libperl-dev libicu-dev -y
 ####################################
 package require Tcl
 package require http
